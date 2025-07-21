@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>track.ur.expenses</title>
+<title>track.ur.expenses.</title>
 <link href="https://fonts.googleapis.com/css2?family=Satisfy&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
 * {
@@ -70,6 +70,7 @@ h2 {
   width: 100%;
   color: #222;
   margin-bottom: 4px;
+  font-style: italic;
 }
 form {
   display: flex;
@@ -169,15 +170,17 @@ button:active:not(:disabled) { transform: scale(0.98); }
 }
 .ticket strong {
   flex: 1;
-  text-align: left;
 }
 .ticket span {
   flex: 1;
-  text-align: right;
 }
-/* Align product names left like budget/spent/remaining */
 .ticket div span:first-child {
   text-align: left;
+  justify-content: flex-start;
+}
+.ticket div span:last-child {
+  text-align: right;
+  justify-content: flex-end;
 }
 @keyframes ticketIn {
   0% { opacity: 0; transform: translate(-50%, 20px); }
@@ -339,6 +342,5 @@ doneBtn.addEventListener("click", function(){
   }, 4500);
 });
 </script>
-
 </body>
 </html>
