@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>trackurexp</title>
+<title>Minimal Budget Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Satisfy&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
 * {
@@ -169,10 +169,11 @@ button:active:not(:disabled) { transform: scale(0.98); }
 }
 .ticket strong {
   flex: 1;
+  text-align: left;
 }
 .ticket span {
-  text-align: right;
   flex: 1;
+  text-align: right;
 }
 @keyframes ticketIn {
   0% { opacity: 0; transform: translate(-50%, 20px); }
@@ -279,7 +280,7 @@ function showTicket() {
     <div><strong>Spent:</strong><span>₱${spent.toFixed(2)}</span></div>
     <div style="margin-bottom: 10px;"><strong>Remaining:</strong><span>₱${(budget - spent).toFixed(2)}</span></div>
     <hr style="width: 100%; margin: 10px 0;">
-    ${expenses.map(e => `<div><span>${e.name}</span><span>₱ -${e.amount.toFixed(2)}</span></div>`).join('')}
+    ${expenses.map(e => `<div><strong>${e.name}</strong><span>₱ -${e.amount.toFixed(2)}</span></div>`).join('')}
   `;
   document.body.appendChild(ticket);
   setTimeout(() => {
