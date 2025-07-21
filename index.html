@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Expenses Tracker</title></title>
+<title>Minimal Budget Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Satisfy&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
 * {
@@ -165,7 +165,6 @@ button:active:not(:disabled) {
 .hidden {
   display: none;
 }
-
 /* RECEIPT STYLES */
 .ticket {
   position: fixed;
@@ -211,7 +210,7 @@ button:active:not(:disabled) {
 
 <div class="page-container">
 <header>
-  <h1>Iphone 16</h1>
+  <h1>Spend with Intention</h1>
   <div class="separator"></div>
 </header>
 
@@ -263,7 +262,8 @@ const descInput = document.getElementById("desc");
 const amountInput = document.getElementById("amount");
 const section = document.querySelector(".section");
 
-let budget = 0, spent = 0, expenses = [], canClickDone = true;
+let budget = 0, spent = 0, expenses = [];
+let ticketVisible = false;
 
 function updateSummary() {
   budgetDisplay.textContent = budget.toFixed(2);
@@ -291,8 +291,8 @@ function triggerFadeSlideIn() {
 }
 
 function showTicket() {
-  if (!canClickDone) return;
-  canClickDone = false;
+  if (ticketVisible) return;
+  ticketVisible = true;
   const ticket = document.createElement("div");
   ticket.className = "ticket";
   ticket.innerHTML = `<h3 style="font-family: Poppins; margin-bottom: 10px;">Receipt</h3>
@@ -305,7 +305,10 @@ function showTicket() {
   document.body.appendChild(ticket);
   setTimeout(() => {
     ticket.style.animation = "ticketOut 1s forwards";
-    setTimeout(() => ticket.remove(), 1000);
+    setTimeout(() => {
+      ticket.remove();
+      ticketVisible = false;
+    }, 1000);
   }, 3500);
 }
 
@@ -335,7 +338,6 @@ expenseForm.addEventListener("submit", function(e){
   updateSummary();
   refreshExpenses();
   expenseForm.reset();
-  canClickDone = true;
 });
 
 doneBtn.addEventListener("click", function(){
