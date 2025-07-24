@@ -1,345 +1,656 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>track.ur.expenses.</title>
-<link href="https://fonts.googleapis.com/css2?family=Satisfy&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
-<style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Poppins', sans-serif;
-}
-body {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-  color: #111;
-  overflow: hidden;
-}
-.page-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  animation: fadeSlideDown 0.6s ease;
-}
-@keyframes fadeSlideDown {
-  0% { opacity: 0; transform: translateY(-20px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
-.fade-slide-in {
-  animation: fadeSlideDown 0.5s ease;
-}
-header {
-  background: none;
-  color: #111;
-  padding: 20px 10px;
-  flex-shrink: 0;
-}
-header h1 {
-  text-align: center;
-  font-size: 1.7rem;
-  font-family: 'Poppins', sans-serif;
-  margin-bottom: 15px;
-}
-.separator {
-  width: 100%;
-  height: 1px;
-  background: #111;
-  max-width: 500px;
-  margin: 0 auto 15px;
-}
-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
-  max-width: 500px;
-  margin: 5px auto 0;
-  padding: 0 20px;
-  gap: 18px;
-}
-h2 {
-  font-size: 1.05rem;
-  font-weight: 600;
-  text-align: left;
-  width: 100%;
-  color: #222;
-  margin-bottom: 4px;
-}
-form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  width: 100%;
-}
-input, button {
-  padding: 12px;
-  border: 1px solid #111;
-  font-size: 0.9rem;
-  flex: 1 1 48%;
-  background: #fff;
-  color: #111;
-  outline: none;
-  border-radius: 0;
-  font-weight: 400;
-}
-input:disabled {
-  background: #f0f0f0;
-  color: #aaa;
-  cursor: not-allowed;
-}
-button {
-  background: #111;
-  color: #fff;
-  cursor: pointer;
-  flex: 1 1 100%;
-  font-weight: 500;
-  transition: background 0.3s;
-}
-button:hover:not(:disabled) { background: #333; }
-button:active:not(:disabled) { transform: scale(0.98); }
-.section { width: 100%; display: flex; flex-direction: column; gap: 20px; }
-.group { display: flex; flex-direction: column; gap: 10px; }
-.summary {
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  gap: 16px;
-  padding: 15px;
-  border: 1px solid #111;
-  font-size: 0.9rem;
-  font-weight: 400;
-}
-.expense-box {
-  border: 1px solid #111;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding: 12px;
-  gap: 10px;
-}
-.expenses-list {
-  overflow-y: auto;
-  max-height: 150px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.transaction {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-  border: 1px solid #111;
-  font-size: 0.9rem;
-  font-weight: 400;
-}
-.amount-negative { color: #d11a1a; }
-.hidden { display: none; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>track.ur.expenses</title>
+  <link href="https://fonts.googleapis.com/css2?family=Satisfy&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
+      color: #111;
+    }
+    .page-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: none;
+      color: #111;
+      padding: 10px 10px 5px;
+      flex-shrink: 0;
+    }
+    header h1 {
+      text-align: center;
+      font-size: 1.7rem;
+    }
+    main {
+      flex: 1;
+      display: none;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 0 20px;
+      gap: 15px;
+      overflow: hidden;
+    }
+    main.active {
+      display: flex;
+    }
+    h2 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      font-style: italic;
+      text-align: left;
+      width: 100%;
+      color: #222;
+      margin-bottom: 4px;
+    }
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      width: 100%;
+    }
+    input, button {
+      padding: 12px;
+      border: 1px solid #111;
+      font-size: 0.9rem;
+      flex: 1 1 48%;
+      background: #fff;
+      color: #111;
+      outline: none;
+      border-radius: 0;
+      font-weight: 400;
+    }
+    input:disabled {
+      background: #f0f0f0;
+      color: #aaa;
+      cursor: not-allowed;
+    }
+    button {
+      background: #111;
+      color: #fff;
+      cursor: pointer;
+      flex: 1 1 100%;
+      font-weight: 500;
+      transition: background 0.3s, transform 0.2s;
+    }
+    button:hover:not(:disabled) {
+      background: #333;
+    }
+    button:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+    button.disabled-effect {
+      opacity: 0.6;
+      transform: scale(0.98);
+      cursor: not-allowed;
+    }
+    .section {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 10px;
+    }
+    .group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .summary {
+      display: flex;
+      justify-content: center;
+      text-align: center;
+      gap: 16px;
+      padding: 15px;
+      border: 1px solid #111;
+      font-size: 0.9rem;
+      font-weight: 400;
+    }
+    .expense-box {
+      border: 1px solid #111;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      padding: 12px;
+      gap: 10px;
+    }
+    .expenses-list {
+      overflow-y: auto;
+      max-height: 300px;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .transaction {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      border: 1px solid #111;
+      font-size: 0.9rem;
+      font-weight: 400;
+    }
+    .amount-negative {
+      color: #d11a1a;
+    }
+    .hidden {
+      display: none;
+    }
+    .ticket {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      background: #fff;
+      border: 2px solid #111;
+      padding: 20px;
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #111;
+      text-align: left;
+      opacity: 0;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: slideFadeIn 0.5s ease forwards;
+    }
+    .ticket div {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+    }
+    .ticket strong, .ticket span {
+      flex: 1;
+    }
+    .ticket span:first-child {
+      text-align: left;
+    }
+    .ticket span:last-child {
+      text-align: right;
+    }
+    @keyframes slideFadeIn {
+      0% {
+        transform: translate(-50%, 100%);
+        opacity: 0;
+      }
+      100% {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+      }
+    }
+    @keyframes slideDown {
+      0% {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, 100%);
+        opacity: 0;
+      }
+    }
+    .full-receipt {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      background: #fff;
+      border: 2px solid #111;
+      padding: 20px;
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #111;
+      text-align: left;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: slideFadeIn 0.5s ease forwards;
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 15px 0;
+      border-top: 1px solid #111;
+      height: 1cm;
+      flex-shrink: 0;
+      background: #fff;
+      position: relative;
+      z-index: 1100;
+    }
+    .navbar button {
+      background: none;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .navbar svg {
+      width: 28px;
+      height: 28px;
+      fill: #111;
+      transition: fill 0.3s;
+    }
+    .navbar button.active svg {
+      fill: #d11a1a;
+    }
+    /* New styles for receipt preview */
+    .receipt-grid {
+      width: 100%;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      padding: 20px;
+      margin-top: 0;
+      flex: 1;
+      max-height: calc(100vh - 150px); /* Reserve space for navbar and header */
+    }
+    .receipt-preview {
+      border: 1px solid #111;
+      width: 100%;
+      padding: 12px;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-size: 0.9rem;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+    }
+    .receipt-preview:hover {
+      background: #f0f0f0;
+    }
 
-/* Receipt */
-.ticket {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px;
-  background: #fff;
-  border: 2px dashed #111;
-  padding: 20px;
-  font-size: 0.9rem;
-  font-weight: 400;
-  color: #111;
-  text-align: left;
-  opacity: 0;
-  z-index: 1000;
-  animation: ticketIn 0.5s ease forwards;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.ticket div {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
-.ticket strong {
-  flex: 1;
-}
-.ticket span {
-  flex: 1;
-}
-.ticket div span:first-child {
-  text-align: left;
-  justify-content: flex-start;
-}
-.ticket div span:last-child {
-  text-align: right;
-  justify-content: flex-end;
-}
-@keyframes ticketIn {
-  0% { opacity: 0; transform: translate(-50%, 20px); }
-  100% { opacity: 1; transform: translate(-50%, -50%); }
-}
-@keyframes ticketOut {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
-}
-</style>
+    .category-header {
+      font-weight: bold;
+      margin-top: 15px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 5px;
+    }
+    
+    .shop-done-btn {
+      margin-top: 15px;
+      padding: 12px;
+      background: #111;
+      color: #fff;
+      border: none;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .shopping-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+    }
+    
+    .shopping-item input[type="checkbox"] {
+      margin-right: 6px;
+    }
+  </style>
 </head>
 <body>
-
-<div class="page-container">
-<header>
-  <h1>i love you</h1>
-  <div class="separator"></div>
-</header>
-
-<main>
-  <div class="section">
-    <div class="group">
-      <h2 id="section-title">How much is your budget today?</h2>
-      <form id="budget-form">
-        <input type="number" id="budget-input" placeholder="₱ Budget" required />
-        <button type="submit">Start</button>
-      </form>
-      <div id="summary" class="summary hidden">
-        <div>Budget: ₱<span id="budget">0</span></div>
-        <div>Spent: ₱<span id="spent">0</span></div>
-        <div>Remaining: ₱<span id="remaining">0</span></div>
-      </div>
-    </div>
-
-    <div class="group">
-      <h2>What did you spend on?</h2>
-      <form id="expense-form">
-        <input type="text" id="desc" placeholder="Description" disabled required />
-        <input type="number" id="amount" placeholder="₱ Amount" disabled required />
-        <button type="submit" id="add-expense-btn">Add Expense</button>
-      </form>
-      <div class="expense-box">
-        <div class="expenses-list" id="expenses-list">
-          <div style="color:#777; width:100%; text-align:center;">No expenses yet.</div>
+  <div class="page-container">
+    <main id="tracker" class="active">
+      <h1 class="page-title">TALLY</h1>
+      <div class="section">
+        <div class="group">
+          <h2 id="section-title">How much is your budget today?</h2>
+          <form id="budget-form">
+            <input type="number" id="budget-input" placeholder="₱ Budget" required min="0.01" step="0.01" />
+            <button type="submit" id="start-button">Start</button>
+          </form>
+          <div id="summary" class="summary hidden">
+            <div>Budget: ₱<span id="budget">0</span></div>
+            <div>Spent: ₱<span id="spent">0</span></div>
+            <div>Remaining: ₱<span id="remaining">0</span></div>
+          </div>
+        </div>
+        <div class="group">
+          <h2>What did you spend on?</h2>
+          <form id="expense-form">
+            <input type="text" id="desc" placeholder="Description" disabled required />
+            <input type="number" id="amount" placeholder="₱ Amount" disabled required />
+            <button type="submit">Add Expense</button>
+          </form>
+          <div class="expense-box">
+            <div class="expenses-list" id="expenses-list">
+              <div style="color:#777; width:100%; text-align:center;">No expenses yet.</div>
+            </div>
+          </div>
+          <button id="done-btn">Done (Reset)</button>
         </div>
       </div>
-      <button id="done-btn">Done (Reset)</button>
+    </main>
+    
+    <main id="list">
+      <h1 class="page-title">QUEUE</h1>
+      <div class="section">
+        <div class="group">
+          <h2>Your Shopping List</h2>
+          <form id="shopping-form">
+            <input type="text" id="category-input" placeholder="Category (e.g. SCHOOL SUPPLIES)" required />
+            <input type="text" id="item-input" placeholder="Item name" disabled required />
+            <button type="submit">Add to List</button>
+          </form>
+          <div class="expense-box">
+            <div class="expenses-list" id="shopping-list">
+              <div style="color:#777; width:100%; text-align:center;">No items yet.</div>
+            </div>
+          </div>
+          <button id="shop-done-btn" class="shop-done-btn">Done</button>
+        </div>
+      </div>
+    </main>
+    
+    <main id="receipt">
+      <h1 class="page-title">ARCHIVE</h1>
+      <div class="receipt-grid" id="receipt-grid" style="margin-top: 0;"></div>
+        </div>
+      </div>
+    </main>
+    
+    <main id="list">
+    </main>
+    
+    <div class="navbar">
+      <button id="nav-tracker" class="active">
+        <svg viewBox="0 0 24 24"><path d="M17 1H7C5.9 1 5 1.9 5 3v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2zm0 20H7V3h10v18zM8 5h8v2H8V5zm1 4h2v2H9V9zm0 4h2v2H9v-2zm0 4h2v2H9v-2zm4-8h2v2h-2V9zm0 4h2v2h-2v-2zm0 4h2v2h-2v-2z"/></svg>
+      </button>
+      <button id="nav-receipt">
+        <svg viewBox="0 0 24 24"><path d="M20 12c0-1.1.9-2 2-2V7c0-1.1-.9-2-2-2H4C2.9 5 2 5.9 2 7v3c1.1 0 2 .9 2 2s-.9 2-2 2v3c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-3c-1.1 0-2-.9-2-2zm-4 4H8v-2h8v2zm0-4H8V9h8v3z"/></svg>
+      </button>
+      <button id="nav-list">
+        <svg viewBox="0 0 24 24"><path d="M3 4v16h18V4H3zm16 14H5V6h14v12zm-2-9H7v2h10V9zm0 4H7v2h10v-2z"/></svg>
+      </button>
     </div>
   </div>
-</main>
-</div>
 
-<script>
-const budgetForm = document.getElementById("budget-form");
-const expenseForm = document.getElementById("expense-form");
-const budgetInput = document.getElementById("budget-input");
-const summary = document.getElementById("summary");
-const budgetDisplay = document.getElementById("budget");
-const spentDisplay = document.getElementById("spent");
-const remainingDisplay = document.getElementById("remaining");
-const expensesList = document.getElementById("expenses-list");
-const doneBtn = document.getElementById("done-btn");
-const sectionTitle = document.getElementById("section-title");
-const descInput = document.getElementById("desc");
-const amountInput = document.getElementById("amount");
-const section = document.querySelector(".section");
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const budgetForm = document.getElementById("budget-form");
+      const expenseForm = document.getElementById("expense-form");
+      const budgetInput = document.getElementById("budget-input");
+      const summary = document.getElementById("summary");
+      const budgetDisplay = document.getElementById("budget");
+      const spentDisplay = document.getElementById("spent");
+      const remainingDisplay = document.getElementById("remaining");
+      const expensesList = document.getElementById("expenses-list");
+      const doneBtn = document.getElementById("done-btn");
+      const sectionTitle = document.getElementById("section-title");
+      const descInput = document.getElementById("desc");
+      const amountInput = document.getElementById("amount");
+      const receiptGrid = document.getElementById("receipt-grid");
+      const startButton = document.getElementById("start-button");
 
-let budget = 0, spent = 0, expenses = [];
-let receiptShown = false;
+      let budget = 0, spent = 0, expenses = [];
+      let receiptShown = false;
+      let receiptCount = 0;
 
-function updateSummary() {
-  budgetDisplay.textContent = budget.toFixed(2);
-  spentDisplay.textContent = spent.toFixed(2);
-  remainingDisplay.textContent = (budget - spent).toFixed(2);
-}
+      // Storage for all receipts
+      const allReceipts = [];
 
-function refreshExpenses() {
-  expensesList.innerHTML = "";
-  if (expenses.length === 0) {
-    expensesList.innerHTML = '<div style="color:#777; width:100%; text-align:center;">No expenses yet.</div>';
-  } else {
-    expenses.forEach(e => {
-      const item = document.createElement("div");
-      item.classList.add("transaction");
-      item.innerHTML = `<div>${e.name}</div><div class="amount-negative">₱ -${e.amount.toFixed(2)}</div>`;
-      expensesList.appendChild(item);
+      function updateSummary() {
+        budgetDisplay.textContent = budget.toFixed(2);
+        spentDisplay.textContent = spent.toFixed(2);
+        remainingDisplay.textContent = (budget - spent).toFixed(2);
+      }
+
+      function refreshExpenses() {
+        expensesList.innerHTML = "";
+        if (expenses.length === 0) {
+          expensesList.innerHTML = '<div style="color:#777; width:100%; text-align:center;">No expenses yet.</div>';
+        } else {
+          expenses.forEach((e) => {
+            const item = document.createElement("div");
+            item.classList.add("transaction");
+            item.innerHTML = `<div>${e.name}</div><div class="amount-negative">₱ -${e.amount.toFixed(2)}</div>`;
+            expensesList.appendChild(item);
+          });
+        }
+      }
+
+      function createTicketHTML(receipt) {
+        const date = receipt.date;
+        return `<h3>Receipt</h3>
+                <div style="margin-bottom:10px;">Date: ${date}</div>
+                <div><strong>Budget:</strong><span>₱${receipt.budget.toFixed(2)}</span></div>
+                <div><strong>Spent:</strong><span>₱${receipt.spent.toFixed(2)}</span></div>
+                <div><strong>Remaining:</strong><span>₱${(receipt.budget - receipt.spent).toFixed(2)}</span></div>
+                <hr style="width: 100%; margin: 10px 0;">
+                ${receipt.expenses.map(e => `<div><span>${e.name}</span><span>₱ -${e.amount.toFixed(2)}</span></div>`).join("")}
+                <hr style="width: 100%; margin: 10px 0;">
+                <div style="margin-top:10px; font-family:Poppins, sans-serif; text-align:center;">Thank you for tracking your expenses!</div>`;
+      }
+
+      function addReceiptToArchive(receipt) {
+        receiptCount++;
+        const receiptPreview = document.createElement("div");
+        receiptPreview.className = "receipt-preview";
+        receiptPreview.innerHTML = `Receipt #${String(receiptCount).padStart(2, '0')} - ${receipt.date}`;
+        receiptPreview.addEventListener("dblclick", () => showFullReceipt(receipt));
+        receiptGrid.appendChild(receiptPreview);
+      }
+
+      function showTicket() {
+        if (receiptShown) return;
+        receiptShown = true;
+        const date = new Date().toLocaleDateString("en-GB");
+        const receipt = { date, budget, spent, expenses: [...expenses] };
+        
+        // Add receipt to archive
+        allReceipts.push(receipt);
+        addReceiptToArchive(receipt);
+
+        const ticket = document.createElement("div");  
+        ticket.className = "ticket";  
+        ticket.innerHTML = createTicketHTML(receipt);  
+        document.body.appendChild(ticket);  
+
+        const closeTicket = () => {  
+          ticket.style.animation = "slideDown 0.5s ease forwards";  
+          ticket.addEventListener("animationend", () => {  
+            ticket.remove();  
+            resetSession();  
+            setActivePage("tracker");  
+          });  
+          document.removeEventListener("click", closeTicket);  
+        };  
+        setTimeout(() => {  
+          document.addEventListener("click", closeTicket);  
+        }, 0);
+      }
+
+      function showFullReceipt(receipt) {
+        const ticket = document.createElement("div");  
+        ticket.className = "ticket";  
+        ticket.innerHTML = createTicketHTML(receipt);  
+        document.body.appendChild(ticket);  
+
+        const closeTicket = () => {  
+          ticket.style.animation = "slideDown 0.5s ease forwards";  
+          ticket.addEventListener("animationend", () => {  
+            ticket.remove();  
+          });  
+          document.removeEventListener("click", closeTicket);  
+        };  
+        setTimeout(() => {  
+          document.addEventListener("click", closeTicket);  
+        }, 0);
+      }
+
+      function resetSession() {
+        budget = 0; 
+        spent = 0; 
+        expenses = [];
+        budgetInput.value = ""; // Clear the input field
+        updateSummary();
+        refreshExpenses();
+        sectionTitle.textContent = "How much is your budget today?";
+        budgetForm.classList.remove("hidden");
+        summary.classList.add("hidden");
+        descInput.disabled = true;
+        amountInput.disabled = true;
+        receiptShown = false;
+      }
+
+      // Fixed start button functionality
+      budgetForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+        const inputValue = budgetInput.value.trim();
+        
+        if (!inputValue) {
+          budgetInput.focus();
+          return;
+        }
+        
+        budget = parseFloat(inputValue);
+        
+        if (isNaN(budget) || budget <= 0) {
+          budgetInput.value = "";
+          budgetInput.focus();
+          return;
+        }
+        
+        spent = 0;
+        expenses = [];
+        updateSummary();
+        refreshExpenses();
+        sectionTitle.textContent = "Your session summary";
+        budgetInput.value = inputValue; // Preserve the entered value
+        budgetForm.classList.add("hidden");
+        summary.classList.remove("hidden");
+        descInput.disabled = false;
+        amountInput.disabled = false;
+      });
+
+      expenseForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+        const name = descInput.value.trim();
+        const amount = parseFloat(amountInput.value);
+        if (!name || isNaN(amount)) return;
+        expenses.push({ name, amount });
+        spent += amount;
+        updateSummary();
+        refreshExpenses();
+        expenseForm.reset();
+      });
+
+      doneBtn.addEventListener("click", function() {
+        if (budget <= 0) {
+          doneBtn.classList.add("disabled-effect");
+          setTimeout(() => doneBtn.classList.remove("disabled-effect"), 300);
+          return;
+        }
+        showTicket();
+      });
+
+      function setActivePage(targetId) {
+        document.querySelectorAll("main").forEach((m) => m.classList.remove("active"));
+        document.getElementById(targetId).classList.add("active");
+        document.querySelectorAll(".navbar button").forEach((b) => b.classList.remove("active"));
+        document.getElementById("nav-" + targetId).classList.add("active");
+      }
+
+      document.getElementById("nav-tracker").onclick = () => setActivePage("tracker");
+      document.getElementById("nav-receipt").onclick = () => setActivePage("receipt");
+      document.getElementById("nav-list").onclick = () => setActivePage("list");
+
+      // Shopping list functionality
+      const shoppingForm = document.getElementById('shopping-form');
+      const shoppingList = document.getElementById('shopping-list');
+      
+      // Remove "No items yet" text immediately when adding first item
+      shoppingForm.addEventListener('submit', function(e) {
+        const noItemsDiv = shoppingList.querySelector('div');
+        if (noItemsDiv && noItemsDiv.textContent === 'No items yet') {
+          shoppingList.removeChild(noItemsDiv);
+        }
+      });
+      
+      const categoryInput = document.getElementById('category-input');
+      const itemInput = document.getElementById('item-input');
+      
+      // Only unlock item input after blur from category input
+      let itemInputShouldEnable = false;
+      
+      categoryInput.addEventListener('focus', function() {
+        itemInputShouldEnable = false;
+        itemInput.disabled = true;
+      });
+
+      categoryInput.addEventListener('blur', function() {
+        if (this.value.trim()) {
+          itemInputShouldEnable = true;
+          itemInput.disabled = false;
+          itemInput.focus();
+        }
+      });
+
+      shoppingForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const category = document.getElementById('category-input').value.trim();
+        const item = document.getElementById('item-input').value.trim();
+        
+        if (!category || !item) return;
+        
+        // Create category heading if doesn't exist
+        let categoryEl = [...document.querySelectorAll('.category-header')]
+          .find(el => el.textContent === category);
+          
+        if (!categoryEl) {
+          categoryEl = document.createElement('h3');
+          categoryEl.className = 'category-header';
+          categoryEl.textContent = category;
+          shoppingList.appendChild(categoryEl);
+        }
+        
+        // Add item with checkbox
+        const itemEl = document.createElement('div');
+        itemEl.className = 'shopping-item';
+        itemEl.innerHTML = `
+          <input type="checkbox" id="item-${Date.now()}">
+          <label for="item-${Date.now()}">${item}</label>
+        `;
+        shoppingList.appendChild(itemEl);
+        
+        itemInput.value = ''; // Clear item input but keep enabled if category exists
+        if (!categoryInput.value.trim()) {
+          itemInput.disabled = true;
+        }
+      });
+
+      document.getElementById('shop-done-btn').addEventListener('click', function() {
+        shoppingForm.reset();
+        itemInputShouldEnable = false;
+        itemInput.disabled = true;
+      });
+
+      // Initialize archive page if there are any receipts
+      if (allReceipts.length > 0) {
+        allReceipts.forEach(receipt => addReceiptToArchive(receipt));
+      }
     });
-  }
-}
-
-function triggerFadeSlideIn() {
-  section.classList.add("fade-slide-in");
-  setTimeout(() => section.classList.remove("fade-slide-in"), 500);
-}
-
-function showTicket() {
-  if (receiptShown) return;
-  receiptShown = true;
-  const ticket = document.createElement("div");
-  ticket.className = "ticket";
-  ticket.innerHTML = `
-    <h3 style="font-family: Satisfy; margin-bottom: 10px;">Receipt</h3>
-    <div><strong>Budget:</strong><span>₱${budget.toFixed(2)}</span></div>
-    <div><strong>Spent:</strong><span>₱${spent.toFixed(2)}</span></div>
-    <div style="margin-bottom: 10px;"><strong>Remaining:</strong><span>₱${(budget - spent).toFixed(2)}</span></div>
-    <hr style="width: 100%; margin: 10px 0;">
-    ${expenses.map(e => `<div><span>${e.name}</span><span>₱ -${e.amount.toFixed(2)}</span></div>`).join('')}
-  `;
-  document.body.appendChild(ticket);
-  setTimeout(() => {
-    ticket.style.animation = "ticketOut 1s forwards";
-    setTimeout(() => ticket.remove(), 1000);
-  }, 3500);
-}
-
-budgetForm.addEventListener("submit", function(e){
-  e.preventDefault();
-  budget = parseFloat(budgetInput.value);
-  spent = 0;
-  expenses = [];
-  updateSummary();
-  refreshExpenses();
-  sectionTitle.textContent = "Your session summary";
-  budgetForm.classList.add("hidden");
-  summary.classList.remove("hidden");
-  descInput.disabled = false;
-  amountInput.disabled = false;
-  budgetForm.reset();
-  triggerFadeSlideIn();
-});
-
-expenseForm.addEventListener("submit", function(e){
-  e.preventDefault();
-  const name = descInput.value.trim();
-  const amount = parseFloat(amountInput.value);
-  if(!name || isNaN(amount)) return;
-  expenses.push({name, amount});
-  spent += amount;
-  updateSummary();
-  refreshExpenses();
-  expenseForm.reset();
-});
-
-doneBtn.addEventListener("click", function(){
-  showTicket();
-  setTimeout(() => {
-    budget = 0;
-    spent = 0;
-    expenses = [];
-    updateSummary();
-    refreshExpenses();
-    sectionTitle.textContent = "How much is your budget today?";
-    budgetForm.classList.remove("hidden");
-    summary.classList.add("hidden");
-    descInput.disabled = true;
-    amountInput.disabled = true;
-    triggerFadeSlideIn();
-    receiptShown = false;
-  }, 4500);
-});
-</script>
+  </script>
 </body>
 </html>
